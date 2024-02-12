@@ -1,7 +1,9 @@
-## Links de documentações
+## Links para documentações
 
-+ https://docs.oracle.com/en/java/javase/16/language/records.html#GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263
-+
++ Record
+  Classes: https://docs.oracle.com/en/java/javase/16/language/records.html#GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263
++ Bean
+  validation: https://jakarta.ee/specifications/bean-validation/3.0/jakarta-bean-validation-spec-3.0.html#builtinconstraints
 
 ## Configurando o Dev Tools
 
@@ -67,7 +69,8 @@ desenvolvimento de software.
 
 **Importtante!!**
 
-Sempre que mexermos em arquivos de migrações é importante parar a execução do springbot
+- Sempre que mexermos em arquivos de migrações é importante parar a execução do springbot
+- Uma migration depois de executada numca deve ser alterada
 
 + Padrão de versionamento: ``V1__create-table-medicos.sql``
 
@@ -75,7 +78,89 @@ Sempre que mexermos em arquivos de migrações é importante parar a execução 
 
 Para se validar os campos recebidos por requisições basta usar a anotações como ``@Notnull``, ``@Noteblank``
 
+**Importtante!!**
 
+Para que o spring entenda que é preciso validar os campos é importante adicionar a anotação ``@valid`` antes do
+parâmetro
+<br>
 
+![valid.png](api%2Fvalid.png)
 
+## Sobre o @Transactional
+
+O @Transactional é uma anotação utilizada em frameworks de persistência de dados, como o Spring
+Framework, para definir transações em métodos ou classes. Transações são utilizadas para garantir a consistência dos
+dados em operações que envolvem múltiplas alterações no banco de dados, assegurando que todas essas operações sejam
+concluídas com sucesso ou revertidas em caso de erro.
+
+Quando você marca um método com @Transactional, o framework cuida da criação e gerenciamento da transação para você,
+iniciando uma nova transação antes da execução do método marcado e a finalizando ao término do método. Se ocorrer uma
+exceção durante a execução do método, a transação é revertida (rollback) para garantir a integridade dos dados.
+
+## Problemas com arquivos de migrações
+
+As vezes pode ocorrer de mexermos em migrações com o devTools em execução, isso pode acasionar um erro, pois ele pode
+reiniciar a aplicação com o arquivo de migração imcompleto, fazendo os arquivos se perderem em instruções de criação das
+tabelas. Caso isso ocorra o erro seria esse:
+
+````
+Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'flywayInitializer' defined in class path resource [org/springframework/boot/autoconfigure/flyway/FlywayAutoConfiguration$FlywayConfiguration.class]: Validate failed: Migrations have failed validation
+````
+
+*Para resolver esse problema será necessário acessar o banco de dados da aplicação e executar o seguinte comando sql:*
+
+* *delete from flyway_schema_history where success = 0;*
+* *drop database vollmed_api;*
+* *create database vollmed_api;*
+
+## Paginação e ordenação de dados
+
+## DTO
+
+O padrão DTO (Data Transfer Object) é um padrão de arquitetura que era bastante utilizado antigamente em aplicações Java
+distribuídas (arquitetura cliente/servidor) para representar os dados que eram enviados e recebidos entre as aplicações
+cliente e servidor.
+
+O padrão DTO pode (e deve) ser utilizado quando não queremos expor todos os atributos de alguma entidade do nosso
+projeto, situação igual a dos salários dos funcionários mostrado no exemplo de código anterior. Além disso, com a
+flexibilidade e a opção de filtrar quais dados serão transmitidos, podemos poupar tempo de processamento.
+
+## Erro de se usar uma entidade JPA diretamente em  um método do controlador
+
+Outro problema muito recorrente ao se trabalhar diretamente com entidades JPA acontece quando uma entidade possui algum
+autorrelacionamento ou relacionamento bidirecional. causando o error ``StackOverflowError``
+
+## Implementando o recurso de paginação
+
+Para implementar o recurso de paginação em uma API Rest utilizando o Spring Framework, você pode seguir os seguintes
+passos:
+
+- Importe corretamente a classe Pageable no seu controlador.
+- No método que irá listar os registros, adicione o parâmetro Pageable.
+- Altere o tipo de retorno do método para Page<T>, onde T é o tipo dos registros que você está listando.
+- Utilize o parâmetro Pageable no método de busca dos registros, passando-o como argumento.
+- Na URL da requisição, utilize os parâmetros size e page para controlar o número de registros exibidos e a página a ser
+  exibida, respectivamente.
+- Dessa forma, você estará configurando a requisição para trazer apenas a quantidade desejada de registros por página
+
+## Ordenação pela URL no front
+
+Para se ordenar a busca por registro pela url basta usar o recurso ?sort=[nomeDoAtriuto] como no exemplo abaixo:
+
++ http://localhost:8080/medicos?sort=nome
+
+## Parâmetros de paginação
+
+por padrão, os parâmetros utilizados para realizar a paginação e a ordenação devem se chamar page, size e sort.
+Entretanto, o Spring Boot permite que os nomes de tais parâmetros sejam modificados via configuração no arquivo
+application.properties.
+
+Por exemplo, poderíamos traduzir para português os nomes desses parâmetros com as seguintes propriedades:
+
+````
+spring.data.web.pageable.page-parameter=pagina
+spring.data.web.pageable.size-parameter=tamanho
+spring.data.web.sort.sort-parameter=ordem
+
+````
 
