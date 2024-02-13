@@ -5,6 +5,7 @@ import med.voll.api.medico.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class MedicoController {
         // para mudar a quantidade recebida basta usar a anotação @PageableDefault
         // esquema de paginação devolvendo um <Page>
         // converção de Medico para DadosListagmMedico, não precisa do Stream e da converção para o toList()
-        return repository.findAll(paginacao)
+        return repository.findAllByAtivoTrue(paginacao)
                 .map(DadosListagemMedicos::new);
     }
 
@@ -39,6 +40,14 @@ public class MedicoController {
     public void atualizar(@RequestBody @Valid DadosAtualizacaoMedicos dados) {
         var medico = repository.getReferenceById(dados.id());
         medico.atualizarInformacoes(dados);
+
+    }
+    @DeleteMapping("/{id}")//parâmetro dinâmico que vem da URL
+    @Transactional
+    public void excluir(@PathVariable Long id){
+        var medico = repository.getReferenceById(id);
+
+        medico.excluir();
 
     }
 }

@@ -1,6 +1,11 @@
 package med.voll.api.medico;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MedicoRepository extends JpaRepository<Medico, Long> {// classe medico e o seu tipo de chave primária
+import java.util.Optional;
+
+public interface MedicoRepository extends JpaRepository<Medico, Long> {
+   Page<Medico> findAllByAtivoTrue(Pageable paginacao);// classe medico e o seu tipo de chave primária
 }
