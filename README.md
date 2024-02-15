@@ -1,11 +1,10 @@
 ## Links para documentações
 
-+ Record
-  Classes: https://docs.oracle.com/en/java/javase/16/language/records.html#GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263
++ [Record Classes:] (https://docs.oracle.com/en/java/javase/16/language/records.html#GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263)
 + Bean
   validation: https://jakarta.ee/specifications/bean-validation/3.0/jakarta-bean-validation-spec-3.0.html#builtinconstraints
-+ https://http.dog/
-+ https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.data
++ Status HTTP: https://http.dog/
++ Documentação aplications.properties: https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.data
 
 ## Configurando o Dev Tools
 
