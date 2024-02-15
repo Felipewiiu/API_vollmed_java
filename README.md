@@ -4,6 +4,8 @@
   Classes: https://docs.oracle.com/en/java/javase/16/language/records.html#GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263
 + Bean
   validation: https://jakarta.ee/specifications/bean-validation/3.0/jakarta-bean-validation-spec-3.0.html#builtinconstraints
++ https://http.dog/
++ https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.data
 
 ## Configurando o Dev Tools
 
@@ -184,3 +186,29 @@ um recurso. Com o PATCH, então, realizamos atualizações parciais, o que torna
 
 Na prática, é difícil saber qual método utilizar, pois nem sempre saberemos se um recurso será atualizado parcialmente
 ou totalmente em uma requisição - a não ser que realizemos uma verificação quanto a isso, algo que não é recomendado.
+
+## Padronização dos retornos de uma API
+
+É muito importante tratar o retorno das requisições HTTP com os seu devidos status dos verbos HTTP (delete, post, get,
+put). Para isso o spring possui uma classe chamada ResponseEntity que controla as respostas devolvidas pelo Spring Boot
+
+para exemplificar temos a classe de controller de Médicos:
+
+````
+@DeleteMapping("/{id}")//parâmetro dinâmico que vem da URL
+    @Transactional
+    public ResponseEntity excluir(@PathVariable Long id){
+        var medico = repository.getReferenceById(id);
+        medico.excluir();
+
+        return ResponseEntity.noContent().build();
+
+    }
+ ````
+**Método de cadastrar, POST.**
+
+esse metodo precisa devolver uma série de informações como:
+
++ _Devolver o código 201_
++ _Cabeçalho location com a URI_
++ _No corpo da resposta é necessário ter uma representação do recurso recém criado._
