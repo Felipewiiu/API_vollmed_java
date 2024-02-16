@@ -65,12 +65,17 @@ Com o Lombok, desenvolvedores podem escrever código mais conciso e legível, fo
 vez de se preocuparem com a implementação tediosa de métodos repetitivos. Isso ajuda a reduzir erros e acelera o
 desenvolvimento de software.
 
-## Ferramentas de migrações
+## Ferramentas de migrações com o Flyway
+
+O Flyway é uma ferramenta de controle de versão de banco de dados. Ele permite que você gerencie e aplique migrações de
+banco de dados de forma automatizada, garantindo que as alterações no esquema do banco de dados sejam aplicadas
+corretamente. No contexto da aula, o Flyway foi utilizado para executar a migration e criar a tabela "usuarios" no banco
+de dados.
 
 **Importtante!!**
 
 - Sempre que mexermos em arquivos de migrações é importante parar a execução do springbot
-- Uma migration depois de executada numca deve ser alterada
+- Uma migration depois de executada nunca deve ser alterada
 
 + Padrão de versionamento: ``V1__create-table-medicos.sql``
 
@@ -125,7 +130,7 @@ O padrão DTO pode (e deve) ser utilizado quando não queremos expor todos os at
 projeto, situação igual a dos salários dos funcionários mostrado no exemplo de código anterior. Além disso, com a
 flexibilidade e a opção de filtrar quais dados serão transmitidos, podemos poupar tempo de processamento.
 
-## Erro de se usar uma entidade JPA diretamente em  um método do controlador
+## Erro de se usar uma entidade JPA diretamente em um método do controlador
 
 Outro problema muito recorrente ao se trabalhar diretamente com entidades JPA acontece quando uma entidade possui algum
 autorrelacionamento ou relacionamento bidirecional. causando o error ``StackOverflowError``
@@ -203,6 +208,7 @@ para exemplificar temos a classe de controller de Médicos:
 
     }
  ````
+
 **Método de cadastrar, POST.**
 
 esse metodo precisa devolver uma série de informações como:
@@ -210,3 +216,42 @@ esse metodo precisa devolver uma série de informações como:
 + _Devolver o código 201_
 + _Cabeçalho location com a URI_
 + _No corpo da resposta é necessário ter uma representação do recurso recém criado._
+
+## Tratamento de error em uma api
+
+É de muita importância ao se construir uma API fazermos o tratamento de erro. Nesse caso um dos primeiros tratamentos
+que utilizamos foi a ocultação da stacktrace logo apois um erro como o 500 por exemplo e para tal feito foi preciso
+mexer no arquico ``application.propertis`` e adicionarmos a seguinte instrução:
+
++ server.error.include-stacktrace=never --> com isso a stactrace não aparecerá como resposta ao usuário
+
+## @RestControllerAdvices
+
+Por padrão, exceções não tratadas no código são interpretadas como erro 500. Para lidar com esse problema,
+isolamos o tratamento de erros em uma classe separada, utilizando a anotação @RestControllerAdvice. Criamos a classe
+TratadorDeErros, com um método tratarErro404() que trata a exceção EntityNotFoundException e retorna o código de erro
+
+404. Essa abordagem permite ter um código mais enxuto nos controllers e facilita o tratamento de diferentes tipos de
+     erros e sem utilizar o try/catch nos controladores de rotas.
+
+## Spring security
+
+## hashing de senha
+
+Ao implementar uma funcionalidade de autenticação em uma aplicação, independente da linguagem de programação utilizada,
+você terá que lidar com os dados de login e senha dos usuários, sendo que eles precisarão ser armazenados em algum
+local, como, por exemplo, um banco de dados.
+
+Senhas são informações sensíveis e não devem ser armazenadas em texto aberto, pois se uma pessoa mal intencionada
+conseguir obter acesso ao banco de dados, ela conseguirá ter acesso às senhas de todos os usuários. Para evitar esse
+problema, você deve sempre utilizar algum algoritmo de hashing nas senhas antes de armazená-las no banco de dados.
+
+Existem diversos algoritmos de hashing que podem ser utilizados para fazer essa transformação nas senhas dos usuários,
+sendo que alguns são mais antigos e não mais considerados seguros hoje em dia, como o MD5 e o SHA1. Os principais
+algoritmos recomendados atualmente são:
+
+1. Bcrypt
+2. Scrypt
+3. Argon2
+4. PBKDF2
+ 
