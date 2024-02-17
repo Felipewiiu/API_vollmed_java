@@ -4,17 +4,18 @@
 + [Bean validation:](https://jakarta.ee/specifications/bean-validation/3.0/jakarta-bean-validation-spec-3.0.html#builtinconstraints)
 + [Status HTTP:](https://http.dog/)
 + [Documentação aplications.properties:](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.data)
++ [JPA Query Methods:](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
 
 ## Configurando o Dev Tools
 
 Para fazer a configuração do Dev Tools, basta
 
-1 - pressionar a tecla sheft + sheft
-2 - settings
-3 - build, execution, Deployment
-4 - Compiler --> marque a opção: Allows auto-make to start even if development
-5 - advanced settings
-6 - aply
+1. pressionar a tecla sheft + sheft
+2. settings
+3. build, execution, Deployment
+4. Compiler => marque a opção: Allows auto-make to start even if development
+5. advanced settings
+6. aply
 
 ## entendendo sobre configurações de controllers
 
@@ -254,4 +255,25 @@ algoritmos recomendados atualmente são:
 2. Scrypt
 3. Argon2
 4. PBKDF2
- 
+
+## Configurações de segurança
+
+É preciso tornar a autenticação stateless e para isso devemos utilizamos a classe``SecurityConfigurations`` no pacote
+infra.security para personalizar as configurações de segurança. devemos Desabilitar a proteção contra ataques CSRF e
+definir a política de criação de sessão como STATELESS. Com essa configuração, o Spring Security não bloqueia mais todas
+as requisições e não exibe o formulário de login, permitindo que as requisições sejam liberadas e retornem os dados
+corretos.
+
+## Error no controle de autenticação
+
+Para se resolver esse erro basta implementar o método AuthenticationManager:
+
+````java
+
+@Bean// ensina como o spring injeta as dependências
+public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    return configuration.getAuthenticationManager();
+}
+````
+
+![img.png](img.png)
