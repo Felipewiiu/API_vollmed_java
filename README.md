@@ -1,10 +1,11 @@
-## Links para documentações
+## Links das documentações de referências
 
 + [Record Classes:](https://docs.oracle.com/en/java/javase/16/language/records.html#GUID-6699E26F-4A9B-4393-A08B-1E47D4B2D263)
 + [Bean validation:](https://jakarta.ee/specifications/bean-validation/3.0/jakarta-bean-validation-spec-3.0.html#builtinconstraints)
 + [Status HTTP:](https://http.dog/)
 + [Documentação aplications.properties:](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.data)
 + [JPA Query Methods:](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
++ [Site JWT:](https://jwt.io/libraries?language=Java)
 
 ## Configurando o Dev Tools
 
@@ -277,3 +278,26 @@ public AuthenticationManager authenticationManager(AuthenticationConfiguration c
 ````
 
 ![img.png](img.png)
+
+## Configuração do tipo de criptografia na API
+
+Para que podemos ensinar para o Spring qual algoritimo de hash usar, basta adicionar o método ``passwordEncoder`` na
+classe de configuração
+
+````java
+
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+````
+
+## A interface UserDetails
+
+A interface UserDetails é uma interface do Spring Security que define os métodos necessários para obter informações
+sobre um usuário autenticado. Ela fornece informações como nome de usuário, senha, autorizações (roles) e se a conta do
+usuário está expirada, bloqueada, etc. Essas informações são usadas pelo Spring Security para realizar a autenticação e
+autorização do usuário.
+
+
+
