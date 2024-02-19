@@ -299,5 +299,7 @@ sobre um usuário autenticado. Ela fornece informações como nome de usuário, 
 usuário está expirada, bloqueada, etc. Essas informações são usadas pelo Spring Security para realizar a autenticação e
 autorização do usuário.
 
+## Processo de interceptação de requisições (middleware)
 
+![img_1.png](img_1.png)
 
