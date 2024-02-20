@@ -301,5 +301,30 @@ autorização do usuário.
 
 ## Processo de interceptação de requisições (middleware)
 
+O filtro de segurança em um projeto Spring Boot serve para interceptar requisições e validar
+um token antes que ele chegue ao controller. Para isso criamos a classe SecurityFilter e implementamos a interface
+Filter.
+Logo a baixo vomos verificar a construção dessa classe:
+
+````java
+
+@Component// usado para anotar classes genéricas
+public class SecurityFilter extends OncePerRequestFilter {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        filterChain.doFilter(request, response);// chama o próximo filtro
+        System.out.println("Filtro chamado");
+    }
+}
+````
+
+**Note** que a classe SecurityFilter possui uma anotação chamada de _@Component_ essa anotação é usada no Spring
+Framework para indicar que uma classe é um componente gerenciado pelo contêiner de injeção de dependência. Essa anotação
+permite que o Spring detecte automaticamente a classe e a registre como um bean, tornando-a disponível para ser injetada
+em outras partes do sistema. Em resumo, a anotação @Component é usada para definir uma classe como um componente do
+Spring.
+
+<br>
+
 ![img_1.png](img_1.png)
 
