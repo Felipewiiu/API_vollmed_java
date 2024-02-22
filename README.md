@@ -328,3 +328,10 @@ Spring.
 
 ![img_1.png](img_1.png)
 
+## Configuração da ordem dos filtros do spring
+
+A função de filtro no Spring Framework é usada para interceptar e manipular requisições HTTP e respostas antes e depois
+de serem processadas pelos controladores. Isso permite a execução de lógica adicional, como autenticação, autorização,
+validação de entrada, logging e muito mais. Os filtros são implementados como classes que implementam a interface
+javax.servlet.Filter. Eles são configurados no arquivo de configuração do Spring (web.xml ou usando anotações) e podem
+ser ordenados para especificar a ordem de execução.

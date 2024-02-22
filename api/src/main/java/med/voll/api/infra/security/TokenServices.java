@@ -16,15 +16,16 @@ import java.util.Date;
 
 @Service
 public class TokenServices {
-    @Value("${api.securiy.token.secrety}")
+    @Value("${api.security.token.secrety}")
     private String secret;
 
-    public String gerartoken(Usuario usuario) {
 
+    public String gerartoken(Usuario usuario) {
+        System.out.println(secret + "Esse é o segredo");
         try {
             var algoritmo = Algorithm.HMAC256(secret);// criação do algotitimo de criptografia
             return JWT.create()
-                    .withIssuer("API voll med")
+                    .withIssuer("API voll.med")
                     .withSubject(usuario.getLogin())// representa a pessoa proprietária do token
                     .withClaim("id", usuario.getId())
                     .withExpiresAt(dataExpiracao())
@@ -38,7 +39,7 @@ public class TokenServices {
         try {
             var algoritmo = Algorithm.HMAC256(secret);// criação do algotitimo de criptografia
             return JWT.require(algoritmo)
-                    .withIssuer("API voll med")
+                    .withIssuer("API voll.med")
                     .build()
                     .verify(tokenJWT)
                     .getSubject();
@@ -50,6 +51,6 @@ public class TokenServices {
     }
 
     private Instant dataExpiracao() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(3).toInstant(ZoneOffset.of("-03:00"));
     }
 }

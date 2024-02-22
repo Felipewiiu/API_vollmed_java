@@ -4,7 +4,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import med.voll.api.domain.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,15 +18,22 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
     private TokenServices tokenServices;
+
+    @Autowired
+    private UsuarioRepository repository;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var tokenJWT = recuperarToken(request);
-        System.out.println("filtro chamado \n");
-        System.out.println(tokenJWT);
 
-        var subject = tokenServices.getSubject(tokenJWT);
-        System.out.println(subject);
+        if (tokenJWT != null) {
+            var subject = tokenServices.getSubject(tokenJWT);// Recupera o token no cabeçalho
+            var usuario = repository.findByLogin(subject);// carrega o usuário do banco de dados
+            // força a autenticação
+            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
 
+            SecurityContextHolder.getContext().setAuthentication(authentication );
+        }
 
         filterChain.doFilter(request, response);// chama o próximo filtro
     }
@@ -33,10 +43,12 @@ public class SecurityFilter extends OncePerRequestFilter {
     private String recuperarToken(HttpServletRequest request) {
         var authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader == null){
-            throw new RuntimeException("Token não enviado no cabeçalho no authorization");
+        if (authorizationHeader != null) {
+            return authorizationHeader.replace("Bearer", "").trim();
         }
 
-        return authorizationHeader.replace("Bearer", "");
+        return null;
+
+
     }
 }
