@@ -335,3 +335,22 @@ de serem processadas pelos controladores. Isso permite a execução de lógica a
 validação de entrada, logging e muito mais. Os filtros são implementados como classes que implementam a interface
 javax.servlet.Filter. Eles são configurados no arquivo de configuração do Spring (web.xml ou usando anotações) e podem
 ser ordenados para especificar a ordem de execução.
+
+## Tipos de erros que são comuns de acontecer ao adicionar a classe de segurança no spring
+
+1. **Erro ao recuperar o token JWT**
+
+Na linha do return, dentro do if, utilizamos o método replace da classe String do Java para apagar a palavra Bearer.
+Repare que existe um espaço em branco após a palavra Bearer. Um erro comum é esquecer de colocar esse espaço em branco e
+o certo é deixar o código assim:
+
+````java
+private String recuperarToken(HttpServletRequest request) {
+    var authorizationHeader = request.getHeader("Authorization");
+    if (authorizationHeader != null) {
+        return authorizationHeader.replace("Bearer ", "").trim();
+    }
+
+    return null;
+}
+````

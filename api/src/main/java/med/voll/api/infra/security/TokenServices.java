@@ -39,7 +39,7 @@ public class TokenServices {
         try {
             var algoritmo = Algorithm.HMAC256(secret);// criação do algotitimo de criptografia
             return JWT.require(algoritmo)
-                    .withIssuer("API voll.med")
+                    .withIssuer("API voll.med")//método utilizado para especificar o emissor (issuer)
                     .build()
                     .verify(tokenJWT)
                     .getSubject();

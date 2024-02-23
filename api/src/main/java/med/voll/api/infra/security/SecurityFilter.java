@@ -32,7 +32,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             // força a autenticação
             var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
 
-            SecurityContextHolder.getContext().setAuthentication(authentication );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);// chama o próximo filtro
@@ -45,6 +45,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null) {
             return authorizationHeader.replace("Bearer", "").trim();
+            //muito importante fazer o tratamento de string com replace e o trim, caso não faça ocorrerá o error 403
         }
 
         return null;
